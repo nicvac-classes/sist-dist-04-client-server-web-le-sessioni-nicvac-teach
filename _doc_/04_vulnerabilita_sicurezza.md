@@ -85,7 +85,7 @@ La funzione `htmlspecialchars()` converte i caratteri speciali HTML in entità H
 - `>` diventa `&gt;`
 
 Questo impedisce l'esecuzione di codice JavaScript maligno, perché il browser interpreterà i caratteri speciali come testo da visualizzare e non come codice da eseguire. Nell'esempio precedente, l'output sanificato sarebbe:<br/>
-`Benvenuto, &lt;script&gt;document.cookie&lt;/script&gt;`
+`Benvenuto, &lt;script&gt;document.write(document.cookie);&lt;/script&gt;`
 
 I cookie sono particolarmente vulnerabili agli attacchi XSS perché JavaScript può accedere ai cookie della pagina corrente attraverso l'oggetto `document.cookie`.
 
