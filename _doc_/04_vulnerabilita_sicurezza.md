@@ -22,11 +22,11 @@ Benvenuto, Paul
 
 Ma che succede se inviamo un richiesta di questo tipo?
 
-`http://tuosito.com/welcome.php?name=<script>document.cookie</script>`
+`http://tuosito.com/welcome.php?name=<script>document.write( document.cookie );</script>`
 
 La pagina restituita diventa:
 ```html
-Benvenuto, <script>document.cookie</script>
+Benvenuto, <script>document.write( document.cookie );</script>
 ```
 forzando il server a generare una pagina di risposta con del codice javascript arbitrario, che viene eseguito nel browser dell'utente che la riceve.
 
@@ -69,7 +69,7 @@ Il browser di Tony eseguirà il codice Javascript, caricando i cookie di Tony su
 
 Come per Tony, CyberCrime collezionerà sul suo sito web i cookie di tutti gli utenti che accedono alla pagina Instagram di Tanos.
 
-Questo esempio mostra come **i cookie non sono adeguati per memorizzare dati sensibili**.
+Questo esempio mostra come **i cookie non sono adeguati per memorizzare dati sensibili in chiaro (password, dati personali, ecc.)**.
 
 #### Protezione da Cross-Site Scripting (XSS)
 Per prevenire un attacco del genere, sul server va utilizzato htmlspecialchars():
@@ -151,7 +151,18 @@ Quando la vittima visita questa pagina maligna, mentre è ancora collegato al si
 
 #### Protezione da CSRF
 
-La protezione CSRF si basa sul principio che il sito maligno non può leggere il contenuto delle risposte dal sito legittimo. Ecco come implementare una protezione:
+Oltre che l'impostazione **samesite** già accennata in precedenza per prevenire il CSRF:
+```php
+<?php
+setcookie("session_id", "123456", [
+    'httponly' => true,    // Previene l'accesso via JavaScript
+    'secure' => true,      // Solo HTTPS
+    'samesite' => 'Strict' // Previene CSRF
+]);
+?>
+```
+
+Un'ulteriore protezione CSRF si basa sul principio che il sito maligno non può leggere il contenuto delle risposte dal sito legittimo. Ecco come implementare una protezione:
 
 Per prima cosa, generiamo un token CSRF univoco:
 
